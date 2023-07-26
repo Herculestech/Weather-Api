@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+</head>
+<body>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      /* background-color: #4CAF50; */
+      /* background-image: url("coldbg.jpeg"); */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 50px;
+      color: #fff;
+    }
+
+    h1 {
+      color: #fff;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #weather-info {
+      margin-top: 30px;
+    }
+
+    #weather-info h2 {
+      margin-bottom: 20px;
+    }
+
+    #weather-info p {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body id="background">
+  <div class="container">
+    <h1>Weather App</h1>
+    
+    <label for="city-input">Enter a city name:</label>
+    <input type="text" id="city-input" placeholder="City name">
+    <button id="get-weather-btn">Get Weather</button>
+    
+    <div id="weather-info"></div>
+  </div>
+
+  <script>
+    // Function to display weather information on the page
+    function displayWeather(weatherData) {
+      const cityName = weatherData.name;
+      const temperature = weatherData.main.temp;
+      const weatherDescription = weatherData.weather[0].description;
+      updateBackgroundImage(temperature)
+
+      const weatherInfoDiv = document.getElementById('weather-info');
+      weatherInfoDiv.innerHTML = `
+        <h2>Weather Information</h2>
+        <p><strong>City:</strong> ${cityName}</p>
+        <p><strong>Temperature:</strong> ${temperature} K/ ${temperature-273}oC</p>
+        <p><strong>Weather:</strong> ${weatherDescription}</p>
+      `;
+    }
+    function updateBackgroundImage(temperature){
+      const bodyElement = document.body;
+      let bgClass;
+      if (temperature < 273){
+        //very cold (below 0 degrees Celsius or 273 Kelvin)
+       document.body.style.backgroundColor = 'red'
+        
+      }else if (temperature >= 273 && temperature < 283){
+        //Cold to moderate (0 to 10 degrees Celsius or 273 to 283 Kelvin)
+        document.body.style.backgroundColor = 'blue'
+      }else if (temperature >= 283 && temperature < 298){
+        //Moderate to warm (10 to 25 degrees Celsius or 283 to 298 Kelvin)
+        document.body.style.backgroundColor = 'green'
+      } else {
+        //Hot  (above 25 degrees Celsius or 298 Kelvin)
+        document.body.style.backgroundColor = 'orange'
+      }
+      //Remove all existing waether condition classes from body and add the appropriate one
+      bodyElement.classList.remove('cold-bg','moderate-bg','warm-bg','hot-bg');
+      bodyElement.classList.add(bgClass);
+    }
+
+    // Function to make the API request to retrieve weather data
+    function getWeatherData() {
+      const city = document.getElementById('city-input').value;
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e396d54efb47aa1c851678ce33f347b1`)
+        .then(response => response.json())
+        .then(data => displayWeather(data))
+        .catch(error => console.log('Error:', error));
+    }
+
+    // Attach event listener to the "Get Weather" button
+    document.getElementById('get-weather-btn').addEventListener('click', getWeatherData);
+  </script>
+</body>
+</html>
+
