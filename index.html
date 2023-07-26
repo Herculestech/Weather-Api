@@ -87,6 +87,7 @@
     function displayWeather(weatherData) {
       const cityName = weatherData.name;
       const temperature = weatherData.main.temp;
+      const temperatureCelsius = (temperature-273.15).toFixed(1)
       const weatherDescription = weatherData.weather[0].description;
       updateBackgroundImage(temperature)
 
@@ -94,7 +95,7 @@
       weatherInfoDiv.innerHTML = `
         <h2>Weather Information</h2>
         <p><strong>City:</strong> ${cityName}</p>
-        <p><strong>Temperature:</strong> ${temperature} K/ ${temperature-273}oC</p>
+        <p><strong>Temperature:</strong> ${temperatureCelsius} &#8451; (${temperature} K)</p>
         <p><strong>Weather:</strong> ${weatherDescription}</p>
       `;
     }
